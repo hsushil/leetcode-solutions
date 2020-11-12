@@ -1,0 +1,38 @@
+//C program to find Kth smallest pair distance 
+//leetcode - Hard - 719
+#include<stdio.h>
+#include<stdlib.h>
+
+int cmpfunc (const void * a, const void * b) {
+   return ( *(int*)a - *(int*)b );
+}
+int smallestDistancePair(int* nums, int numsSize, int k){
+
+    qsort(nums, numsSize, sizeof(int), cmpfunc);
+    int lo = 0, hi = nums[numsSize- 1]-nums[0];
+        while (hi > lo) {
+            int mid = (lo + hi) / 2;
+      int count = 0, left = 0;
+            for (int right = 0; right < numsSize; ++right) {
+                while (nums[right] - nums[left] > mid)  {
+                    left++;
+                }
+                count += right - left;
+            }
+            //count = number of pairs with distance <= mi
+            if (count >= k) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        return lo;
+
+  }
+  
+  int main(){
+
+   int v[] = {1,5,8};
+   int ret = smallestDistancePair(v, 3 , 1);
+           printf("YESSS :%d\n",ret);
+}
