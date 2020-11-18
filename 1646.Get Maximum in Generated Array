@@ -1,0 +1,24 @@
+// C program 
+//1646. Get Maximum in Generated Array
+//leet code : medium 
+int getMaximumGenerated(int n){
+
+        //If n < 3, then answer is 0 or 1
+        if(n < 3)
+            return n == 0 ? 0 : 1;
+        
+        //Have an array of size n + 1 and initialize first two numbers to 0 and 1
+        int nums[n+1];
+        nums[0] = 0; nums[1] = 1;
+        int res = 0;
+        
+        //For loop as long as 2i+1 <= n
+        for(int i = 1; (2*i) + 1 <= n; i++)
+        {
+            //Fill in positions of 2i & 2i+1. Get max number out of these two.
+            nums[2 * i] = nums[i];
+            nums[(2*i) + 1] = nums[i] + nums[i+1];
+            res = fmax(res, nums[(2*i) + 1]);
+        }
+        return res;
+    }
