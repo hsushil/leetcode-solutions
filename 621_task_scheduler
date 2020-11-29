@@ -1,0 +1,59 @@
+//Given a characters array tasks, representing the tasks a CPU needs to do, where each letter
+//represents a different task. Tasks could be done in any order. Each task is done in one unit of time.
+//For each unit of time, the CPU could complete either one task or just be idle.
+
+//However, there is a non-negative integer n that represents the cooldown period between two same tasks 
+//(the same letter in the array), that is that there must be at least n units of time between any two same tasks.
+
+//Return the least number of units of times that the CPU will take to finish all the given tasks.
+
+//Example 1:
+
+//Input: tasks = ["A","A","A","B","B","B"], n = 2
+//Output: 8
+//Explanation: 
+//A -> B -> idle -> A -> B -> idle -> A -> B
+//There is at least 2 units of time between any two same tasks.
+
+//Algorithm exaplaination : https://www.youtube.com/watch?v=eGf-26OTI-A
+//Sorting complexity can be reduced , find max element in the array.
+void swap(int* xp, int* yp) 
+{ 
+    int temp = *xp; 
+    *xp = *yp; 
+    *yp = temp; 
+} 
+int leastInterval(char* tasks, int tasksSize, int n){
+      int count[26] = {0}; 
+  
+     // Traversing through the string and maintaining 
+    // the count of each character 
+    for (int i = 0; i < tasksSize; i++)  
+        count[tasks[i]-'A']++; 
+
+  int k = sizeof(count) / sizeof(count[0]); 
+
+    // One by one move boundary of unsorted subarray 
+    for (int i = 0; i < k - 1; i++) { 
+  
+        // Find the minimum element in unsorted array 
+       int  min_idx = i; 
+        for (int j = i + 1; j <k; j++) 
+            if (count[j] < count[min_idx]) 
+                min_idx = j; 
+  
+        // Swap the found minimum element 
+        // with the first element 
+        swap(&count[min_idx], &count[i]); 
+    } 
+        //Most frequent occured element wil be at the end 
+        //{A,A,B,C,C,C,C,C,D,}, sorted arry based occured frequncy {B,C,D,A,C}
+        //last element isnt required to evaluate 
+        int max_val = count[25]-1;
+        int idle=max_val*n;
+        for(int i=24;i>=0;i--)
+        {
+            idle-=fmin(count[i],max_val);
+        }
+        return idle>0?idle+tasksSize:tasksSize;
+}
